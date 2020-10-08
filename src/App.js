@@ -16,7 +16,7 @@ function App() {
      <button onClick={
          () =>{
              switcher(prevColor => (
-                 prevColor === "black" ? "white" : 'black'
+                 prevColor === "red" ? "white" : 'red'
              ));
              sweetcher(prevColor => (
                  prevColor === "100px" ? "0" : '100px'
