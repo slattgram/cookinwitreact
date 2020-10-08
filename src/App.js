@@ -7,7 +7,7 @@ export const MyContext = React.createContext()
 
 
 function App() {
-    const [mystyle,switcher] = useState("black")
+    const [mystyle,switcher] = useState("red")
     const [moistyle,sweetcher] = useState("100px")
     return (
     <MyContext.Provider value={{backgroundColor : mystyle ,borderRadius : moistyle}}>
