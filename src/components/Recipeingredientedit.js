@@ -1,10 +1,14 @@
 import React from "react";
-export default function (){
+export default function ({ingredient}){
     return(
         <>
-            <input type={"text"}/>
-            <input type={"text"}/>
-            <button>&times;</button>
+            <input className={"recipe-edit__input"}
+                   value={ingredient.name}
+                   type={"text"}/>
+            <input className={"recipe-edit__input"}
+                   value={ingredient.amount}
+                   type={"text"}/>
+            <button className={"btn btn--danger"}>&times;</button>
         </>
     )
 }
