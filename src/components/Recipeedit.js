@@ -1,11 +1,42 @@
 import React from 'react'
 import Recipeingredientedit from "./Recipeingredientedit";
+import {useContext} from 'react'
+import {RecipeContext} from "./App";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Recipeedit({recipe}){
+    const {handleRecipeChange,handleRecipeSelect} = useContext(RecipeContext)
+
+    function handleChange(changes){
+        handleRecipeChange(recipe.id,{...recipe,...changes})
+    }
+
+    function handleIngredientChange(id,ingredient){
+        const newIngredients = [...recipe.ingredients]
+        const index = newIngredients.findIndex(i => i.id ===id)
+        newIngredients[index] = ingredient
+        handleChange({ingredients:newIngredients})
+    }
+
+    function handleIngredientAdd(){
+        const newIngredient ={
+            id:uuidv4(),
+            name:'',amount:""
+        }
+        handleChange({ingredients: [...recipe.ingredients,newIngredient]})
+    }
+
+    function handleIngredientDelete(id){
+        handleChange({ingredients:recipe.ingredients.filter(i=>i.id!==id)})
+    }
+
     return(
         <div className={"recipe-edit"}>
             <div className={'recipe-edit__remove-button-container'}>
-                <button className={"btn recipe-edit__remove-button"}>&times;</button>
+                <button className={"btn recipe-edit__remove-button"}
+                        onClick={()=>handleRecipeSelect(undefined)}>
+                    &times;
+                </button>
             </div>
             <div className={"recipe-edit__details-grid"}>
                 <label
@@ -17,6 +48,7 @@ export default function Recipeedit({recipe}){
                     type={"text"}
                     name={"name"}
                     id={"name"}
+                    onChange={e => handleChange({name:e.target.value})}
                     value={recipe.name}
                     className={"recipe-edit__input"}
                 />
@@ -29,13 +61,13 @@ export default function Recipeedit({recipe}){
                     type={"text"}
                     name={"cookTime"}
                     id={"cookTime"}
+                    onChange={e => handleChange({cookTime:e.target.value})}
                     value={recipe.cookTime}
                     className={"recipe-edit__input"}
                 />
                 <label
                     htmlFor={"servings"}
                     className={"recipe-edit__label"}
-                    value={recipe.servings}
                 >
                     Servings
                 </label>
@@ -45,6 +77,7 @@ export default function Recipeedit({recipe}){
                     name={"servings"}
                     id={"servings"}
                     value={recipe.servings}
+                    onChange={e => handleChange({servings:parseInt(e.target.value)||""})}
                     className={"recipe-edit__input"}
                 />
                 <label
@@ -55,6 +88,7 @@ export default function Recipeedit({recipe}){
                 <textarea
                     name={"instructions"}
                     id={"instructions"}
+                    onChange={e => handleChange({instructions:e.target.value})}
                     value={recipe.instructions}
                     className={"recipe-edit--label"}
                 />
@@ -74,16 +108,22 @@ export default function Recipeedit({recipe}){
                 <div>
                     Amount
                 </div>
-                <div></div>
+
                 {recipe.ingredients.map(ingredient =>(
                     <Recipeingredientedit key={ingredient.id}
-                                          ingredient={ingredient}/>
+                                          handleIngredientChange={handleIngredientChange}
+                                          handleIngredientDelete={handleIngredientDelete}
+                                          ingredient={ingredient}
+                    />
                 ))}
                 {}
 
             </div>
             <div className={"recipe-edit__add-ingredient-btn-container"}>
-                <button className={"btn btn--primary"}>Add Ingredient</button>
+                <button
+                    className={"btn btn--primary"}
+                    onClick={handleIngredientAdd}
+                >Add Ingredient</button>
             </div>
         </div>
     )

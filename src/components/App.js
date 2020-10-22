@@ -16,7 +16,7 @@ function App() {
 
     useEffect(()=>{
         const recipeJSON = localStorage.getItem(LOCAL_STORAGE_KEY)
-        if (recipeJSON != null){ setRecipes(JSON.parse(recipeJSON))}
+        if (recipeJSON !== null){ setRecipes(JSON.parse(recipeJSON))}
 
     },[])
     useEffect(()=>{
@@ -26,28 +26,44 @@ function App() {
     function handleRecipeAdd(){
         const newRecipe = {
             id:uuidv4(),
-            name:"New",
+            name:"",
             servings:1,
-            cookTime:'1.00',
-            instructions:"instr.",
+            cookTime:'',
+            instructions:"",
             ingredients:[
-                {id:uuidv4(),name:'name',amount:'1 Tbs'}
+                {id:uuidv4(),name:'',amount:''}
             ]
         }
+        setSelectedRecipeId(newRecipe.id)
         setRecipes([...recipes,newRecipe])
     }
     function handleRecipeDelete(id){
+        if(selectedRecipeId!==null && selectedRecipeId===id){
+            setSelectedRecipeId(undefined)
+        }
         setRecipes(recipes.filter(recipes=>recipes.id !== id))
     }
 
     const recipeContextValue = {
         handleRecipeDelete,
         handleRecipeAdd,
-        handleRecipeSelect
+        handleRecipeSelect,
+        handleRecipeChange
     }
+
+
+
+
 
     function handleRecipeSelect(id){
         setSelectedRecipeId(id)
+    }
+
+    function handleRecipeChange(id,recipe){
+        const newRecipes = [...recipes]
+        const index = newRecipes.findIndex(r => r.id ===id)
+        newRecipes[index] = recipe
+        setRecipes(newRecipes)
     }
 
     return (
